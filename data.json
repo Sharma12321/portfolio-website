@@ -1,0 +1,36 @@
+{
+    "personal_info": {
+        "name": "Your Name",
+        "title": "Web Developer",
+        "about": "A passionate web developer with experience in..."
+    },
+    "skills": [
+        "Python",
+        "Flask",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "React",
+        "Node.js"
+    ],
+    "education": [
+        {
+            "degree": "Bachelor of Science in Computer Science",
+            "institution": "University Name",
+            "year": "2020",
+            "certificate": "bsc_certificate"
+        }
+    ],
+    "projects": [
+        {
+            "name": "E-commerce Platform",
+            "description": "Developed a full-stack e-commerce platform using React and Node.js",
+            "link": "https://github.com/yourusername/ecommerce-project"
+        },
+        {
+            "name": "Machine Learning Model",
+            "description": "Created a machine learning model for predicting stock prices",
+            "link": "https://github.com/yourusername/stock-prediction"
+        }
+    ]
+}

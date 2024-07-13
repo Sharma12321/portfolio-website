@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personal_info.name }} - Portfolio</title>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(45deg, #f06, #9f6);
+            margin: 0;
+            padding: 0;
+        }
+
+        header, nav, section, footer {
+            padding: 20px;
+            margin: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: #f06;
+        }
+
+        .animated-text {
+            display: inline-block;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .skill-item {
+            background-color: #f06;
+            color: white;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .skill-item:hover {
+            transform: scale(1.1);
+        }
+
+        button {
+            background-color: #f06;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d05;
+        }
+
+        .project-item, .education-item {
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #f06;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(45deg, #300, #003);
+            color: #fff;
+        }
+
+        body.dark-mode header,
+        body.dark-mode nav,
+        body.dark-mode section,
+        body.dark-mode footer {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3 {
+            color: #9f6;
+        }
+
+        body.dark-mode .skill-item {
+            background-color: #9f6;
+            color: #300;
+        }
+
+        body.dark-mode button:hover {
+            background-color: #7d4;
+        }
+
+        body.dark-mode a {
+            color: #9f6;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        input, textarea {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            height: 150px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 class="animated-text">{{ personal_info.name }}</h1>
+        <p>{{ personal_info.title }}</p>
+    </header>
+    <nav>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#education">Education</a>
+        <a href="#projects">Projects</a>
+        <button id="darkModeToggle">Toggle Dark Mode</button>
+    </nav>
+    <section id="about">
+        <h2>About Me</h2>
+        <p>{{ personal_info.about }}</p>
+        <button onclick="location.href='{{ url_for('download_resume') }}'">Download Resume</button>
+    </section>
+    <section id="skills">
+        <h2>Skills</h2>
+        <ul class="skill-list">
+            {% for skill in skills %}
+            <li class="skill-item">{{ skill }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section id="education">
+        <h2>Education</h2>
+        {% for edu in education %}
+        <div class="education-item">
+            <h3>{{ edu.degree }}</h3>
+            <p>{{ edu.institution }}, {{ edu.year }}</p>
+            {% if edu.certificate %}
+            <button onclick="location.href='{{ url_for('download_certificate', certificate_name=edu.certificate) }}'">Download Certificate</button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+
+    <section id="projects">
+        <h2>Projects</h2>
+        {% for project in projects %}
+        <div class="project-item">
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.description }}</p>
+            <a href="{{ project.link }}" target="_blank">View Project</a>
+        </div>
+        {% endfor %}
+    </section>
+
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <form action="{{ url_for('contact') }}" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <footer>
+        <p>&copy; 2023 {{ personal_info.name }}. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Animate the header text
+        anime({
+            targets: '.animated-text',
+            translateY: [-50, 0],
+            opacity: [0, 1],
+            easing: 'easeOutExpo',
+            duration: 1500
+        });
+
+        // Animate skill items
+        anime({
+            targets: '.skill-item',
+            scale: [0, 1],
+            opacity: [0, 1],
+            delay: anime.stagger(100),
+            easing: 'easeOutExpo'
+        });
+
+        // Animate sections on scroll
+        const sections = document.querySelectorAll('section');
+
+        const animateSections = () => {
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (sectionTop < windowHeight * 0.75) {
+                    anime({
+                        targets: section,
+                        translateY: [50, 0],
+                        opacity: [0, 1],
+                        easing: 'easeOutExpo',
+                        duration: 1000
+                    });
+                }
+            });
+        };
+
+        window.addEventListener('scroll', animateSections);
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+        });
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark-mode');
+        }
+
+        // Animate project items
+        anime({
+            targets: '.project-item',
+            translateX: [-50, 0],
+            opacity: [0, 1],
+            delay: anime.stagger(200),
+            easing: 'easeOutExpo'
+        });
+
+        // Animate education items
+        anime({
+            targets: '.education-item',
+            scale: [0.9, 1],
+            opacity: [0, 1],
+            delay: anime.stagger(200),
+            easing: 'easeOutExpo'
+        });
+
+        // Animate contact form
+        anime({
+            targets: '#contact form',
+            translateY: [50, 0],
+            opacity: [0, 1],
+            easing: 'easeOutExpo',
+            duration: 1000,
+            delay: 500
+        });
+    </script>
+</body>
+</html>
